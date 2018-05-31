@@ -3,9 +3,9 @@ package com.tota.outside.rpc.api.model;
 import java.util.Date;
 
 public  class Message {
-    private Byte version;
-    private Short messageType;
-    private Date messageDateTime;
+    private Byte   version;
+    private Short  messageType;
+    private Date   messageDateTime;
     private String mac;
     private String responseCode;
 
