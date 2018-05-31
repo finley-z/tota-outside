@@ -1,11 +1,11 @@
 package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.Message;
-import org.apache.poi.ss.formula.functions.T;
+import com.tota.outside.rpc.api.model.SignInMessage;
 
 import java.util.Map;
 
-public class SignInMsgResolver extends Resolver{
+public class SignInMsgResolver extends Resolver<SignInMessage>{
     private static Map<String,String> fieldsConfig;
 
     static{
@@ -27,17 +27,17 @@ public class SignInMsgResolver extends Resolver{
           fieldsConfig.put("keySet","32");
           fieldsConfig.put("reserved","20");
           fieldsConfig.put("responseCode_Body","5");
+          getFields(SignInMessage.class);
     }
 
+
     @Override
-    protected String generateDatagram(Class<T> cls, Message message) {
+    protected String generateDatagram(SignInMessage signInMessage) {
         return null;
     }
 
     @Override
-    protected T resolveDatagram(Class<T> cls, String datagram) {
+    protected SignInMessage resolveDatagram(String datagram) {
         return null;
     }
-
-
 }
