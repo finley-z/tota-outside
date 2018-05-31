@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/tota-outside.iml" filepath="$PROJECT_DIR$/tota-outside.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-common/tota-outside-common.iml" filepath="$PROJECT_DIR$/tota-outside-common/tota-outside-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-core/tota-outside-core.iml" filepath="$PROJECT_DIR$/tota-outside-core/tota-outside-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-dataaccess/tota-outside-dataaccess.iml" filepath="$PROJECT_DIR$/tota-outside-dataaccess/tota-outside-dataaccess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-rpc/tota-outside-rpc.iml" filepath="$PROJECT_DIR$/tota-outside-rpc/tota-outside-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-rpc-api/tota-outside-rpc-api.iml" filepath="$PROJECT_DIR$/tota-outside-rpc-api/tota-outside-rpc-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tota-outside-web/tota-outside-web.iml" filepath="$PROJECT_DIR$/tota-outside-web/tota-outside-web.iml" />
+    </modules>
+  </component>
+</project>

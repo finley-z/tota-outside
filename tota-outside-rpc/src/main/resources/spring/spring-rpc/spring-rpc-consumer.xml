@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  
+
+	<bean id="billnoRpcService" class="com.tota.se.rpc.dubbo.client.DubboClient">
+		<property name="interfaceName" value="com.tota.common.rpc.api.billno.BillNORpcService" />
+		<property name="protocol" value="dubbo" />
+		<property name="isCheck" value="false" />
+	</bean>
+
+	<bean id="dynamicDubboClient" class="com.tota.se.rpc.dubbo.source.DynamicDubboClient">
+		<property name="openLog" value="${logback.dubbo.openLog}" />
+	</bean>
+
+	<bean id="dynamicCreateDubboClientManager" class="com.tota.se.rpc.dubbo.source.DynamicCreateDubboClientManager">
+		<property name="dynamicDubboClient" ref="dynamicDubboClient" />
+	</bean>
+	
+</beans>

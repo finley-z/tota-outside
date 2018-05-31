@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.maxTotal}" />
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+
+	<!-- 集群 -->
+	<bean id="redisSentinel1" class="com.tota.se.dataaccess.redis.config.RedisSentinelConfig">
+		<property name="masterName" value="${redis.masterName1}" />
+		<property name="sentinelAddrs" value="${redis.addresses1}" />
+	</bean>
+
+	<bean id="jedisConnectionFactory1" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg index="0" ref="redisSentinel1" />
+		<constructor-arg index="1" ref="jedisPoolConfig" />
+	</bean>
+
+	<bean id="redisTemplate1" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnectionFactory1" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="jdkSerializationRedisSerializer" />
+		<property name="hashKeySerializer" ref="stringRedisSerializer" />
+		<property name="hashValueSerializer" ref="jdkSerializationRedisSerializer" />
+	</bean>
+
+	<bean id="redisSentinel2" class="com.tota.se.dataaccess.redis.config.RedisSentinelConfig">
+		<property name="masterName" value="${redis.masterName2}" />
+		<property name="sentinelAddrs" value="${redis.addresses2}" />
+	</bean>
+
+	<bean id="jedisConnectionFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg index="0" ref="redisSentinel2" />
+		<constructor-arg index="1" ref="jedisPoolConfig" />
+	</bean>
+
+	<bean id="redisTemplate2" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnectionFactory2" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="jdkSerializationRedisSerializer" />
+		<property name="hashKeySerializer" ref="stringRedisSerializer" />
+		<property name="hashValueSerializer" ref="jdkSerializationRedisSerializer" />
+	</bean>
+
+	<bean id="redisTemplateProxy" class="com.tota.se.dataaccess.redis.template.RedisTemplateProxy">
+		<property name="redisSourceKey" value="${redis.key}" />
+		<property name="redisTemplateList">
+			<list>
+				<ref bean="redisTemplate1" />
+				<ref bean="redisTemplate2" />
+			</list>
+		</property>
+		<property name="isDefault" value="${redis.isDefault}" />
+	</bean>
+
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+	<bean id="jdkSerializationRedisSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+	<bean id="hessianRedisSerializer" class="com.tota.se.common.util.serializer.HessianRedisSerializer" />
+
+	<bean id="dynamicRedisSource" class="com.tota.se.dataaccess.redis.source.DynamicRedisSource">
+		<property name="stringSerializer" ref="stringRedisSerializer" />
+		<property name="valueSerializer" ref="hessianRedisSerializer" />
+	</bean>
+
+	<bean id="dynamicCreateRedisSourceManager" class="com.tota.se.dataaccess.redis.source.DynamicCreateRedisSourceManager">
+		<property name="dynamicRedisSource" ref="dynamicRedisSource" />
+	</bean>
+
+</beans>
