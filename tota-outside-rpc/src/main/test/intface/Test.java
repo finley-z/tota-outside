@@ -1,5 +1,6 @@
 package intface;
 
+import com.tota.outside.rpc.api.model.SignInMessage;
 import com.tota.outside.rpc.resolver.SignInMsgResolver;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
@@ -55,7 +57,17 @@ public class Test {
 
 
     public static void  main(String[]args){
-        new SignInMsgResolver();
+//        Integer i=Integer.valueOf("00000110");
+        SignInMsgResolver resolver=   new SignInMsgResolver();
+        SignInMessage msg=new SignInMessage();
+        msg.setAuthCode("34223");
+        msg.setKeySet("000");
+        msg.setVersion((byte)1);
+
+        String res=resolver.generateDatagram(msg);
+
+//        Set s=SignInMsgResolver.fieldsConfig.keySet();
+
         new Test().sendMsg();
     }
 }
