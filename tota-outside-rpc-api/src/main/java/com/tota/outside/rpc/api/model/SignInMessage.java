@@ -3,7 +3,7 @@ package com.tota.outside.rpc.api.model;
 import java.util.Date;
 
 public class SignInMessage  extends  Message{
-    private Integer  unitid;
+    private Integer  unitId;
     private Byte     txnMode;
     private Long     samId;
     private Long     samAuthInfo;
@@ -21,12 +21,12 @@ public class SignInMessage  extends  Message{
     private String   reserved;
     private Integer  responseCode_Body;
 
-    public Integer getUnitid() {
-        return unitid;
+    public Integer getUnitId() {
+        return unitId;
     }
 
-    public void setUnitid(Integer unitid) {
-        this.unitid = unitid;
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
     }
 
     public Byte getTxnMode() {

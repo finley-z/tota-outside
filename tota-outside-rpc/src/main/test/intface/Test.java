@@ -1,5 +1,7 @@
 package intface;
 
+import com.tota.outside.rpc.resolver.SignInMsgResolver;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -53,6 +55,7 @@ public class Test {
 
 
     public static void  main(String[]args){
+        new SignInMsgResolver();
         new Test().sendMsg();
     }
 }

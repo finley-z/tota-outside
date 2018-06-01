@@ -49,12 +49,4 @@ public  class Message {
         this.responseCode = responseCode;
     }
 
-
-    public  String generateDatagram(){
-        return null;
-    }
-
-    public  Message resolveDatagram(String msg){
-        return null;
-    }
 }

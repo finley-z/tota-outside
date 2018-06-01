@@ -3,14 +3,19 @@ package com.tota.outside.rpc.resolver;
 import com.tota.outside.rpc.api.model.Message;
 import com.tota.outside.rpc.api.model.SignInMessage;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SignInMsgResolver extends Resolver<SignInMessage>{
-    private static Map<String,String> fieldsConfig;
+    private static LinkedHashMap<String,String> fieldsConfig=new LinkedHashMap<>();
+    private static Map<String,Method> methods;
 
     static{
           fieldsConfig.putAll(headerConfigs);
-          fieldsConfig.put("unitid","8");
+          fieldsConfig.put("unitId","8");
           fieldsConfig.put("txnMode","2");
           fieldsConfig.put("samId","16");
           fieldsConfig.put("samAuthInfo","16");
@@ -27,7 +32,11 @@ public class SignInMsgResolver extends Resolver<SignInMessage>{
           fieldsConfig.put("keySet","32");
           fieldsConfig.put("reserved","20");
           fieldsConfig.put("responseCode_Body","5");
-          getFields(SignInMessage.class);
+        try {
+            methods=getFieldGetSetMethods(SignInMessage.class);
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        }
     }
 
 
