@@ -1,5 +1,7 @@
 package com.tota.outside.rpc.api.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class SignInMessage  extends  Message{
@@ -12,8 +14,12 @@ public class SignInMessage  extends  Message{
     private Long     termId;
     private Long     operId;
     private Long     edCardId;
+
+    @DateTimeFormat(pattern="yyyyMMdd")
     private Date     settDate;
     private Integer  batchNo;
+
+    @DateTimeFormat(pattern="yyyyMMddHHmmss")
     private Date     sysDateTime;
     private String   authCode;
     private String   paramBit;

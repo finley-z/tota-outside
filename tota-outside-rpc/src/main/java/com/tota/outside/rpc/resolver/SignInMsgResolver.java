@@ -7,6 +7,7 @@ import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.*;
 
 public class SignInMsgResolver extends Resolver<SignInMessage> {
@@ -44,14 +45,29 @@ public class SignInMsgResolver extends Resolver<SignInMessage> {
 
     @Override
     public String generateDatagram(SignInMessage signInMessage) {
-        StringBuffer buffer = new StringBuffer();
-
-
-        return buffer.toString();
+        try {
+            return generate( fieldsConfig, methods, fields,signInMessage);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public SignInMessage resolveDatagram(String datagram) {
+        try {
+            return resolve( fieldsConfig, methods,  fields,  datagram, SignInMessage.class);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

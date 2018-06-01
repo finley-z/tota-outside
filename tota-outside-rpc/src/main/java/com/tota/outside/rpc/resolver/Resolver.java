@@ -2,24 +2,34 @@ package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.Message;
 import com.tota.se.common.exception.BusinessException;
+import com.tota.se.common.util.date.DateUtil;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.util.*;
 
 public abstract class Resolver<T> {
-    public static LinkedHashMap<String, String> headerConfigs=new LinkedHashMap<>();
+    protected static LinkedHashMap<String, String> headerConfigs = new LinkedHashMap<>();
 
     /**
-     * 请求头初始化
+     * 请求头配置初始化
      */
     static {
-        headerConfigs.put("version", "2");
-        headerConfigs.put("messageType", "4");
-        headerConfigs.put("messageDateTime", "14");
+        headerConfigs.put("dataLength", "4");
+        headerConfigs.put("packageSyncMsg", "12");
+        headerConfigs.put("packageCompress", "1");
+        headerConfigs.put("packageEncrypt", "1");
+        headerConfigs.put("packageVersion", "2");
+        headerConfigs.put("packageMsgType", "4");
+        headerConfigs.put("txVersion", "2");
+        headerConfigs.put("txMsgType", "4");
+        headerConfigs.put("txMsgDateTime", "14");
         headerConfigs.put("mac", "8");
         headerConfigs.put("responseCode", "2");
     }
@@ -32,6 +42,103 @@ public abstract class Resolver<T> {
 
 
     /***
+     * 解析javabean属性中的值到报文域
+     * @return
+     */
+    protected String generate(LinkedHashMap<String, String> fieldsConfig, Map<String, Method> methods, Map<String, Field> fields, T t) throws InvocationTargetException, IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        Set<String> filedSet = fieldsConfig.keySet();
+        Iterator<String> it = filedSet.iterator();
+
+        while (it.hasNext()) {
+            String fieldName = it.next();
+            String getMethodName = fieldName + "_g";
+            Method getMethod = methods.get(getMethodName);
+            Field field = fields.get(fieldName);
+            int valLen = Integer.parseInt(fieldsConfig.get(fieldName));
+            Object val = getMethod.invoke(t);
+            String resolvedVal = getFieldValue(val, field, valLen);
+            buffer.append(resolvedVal);
+        }
+
+        return buffer.toString();
+    }
+    //获取javabean属性值，转换成字符串
+    private String getFieldValue(Object value, Field field, int length) {
+        String val = "";
+        if(field.getType().equals(Date.class)){
+            DateTimeFormat format=field.getAnnotation(DateTimeFormat.class);
+            String pattern=format.pattern();
+            if(value!=null){
+                val= DateUtil.formatDate((Date) value, pattern);
+            }
+        }else if (value != null) {
+            val += value.toString();
+        }
+
+        if (val.length() < length) {
+            Class fieldType = field.getType();
+            if (fieldType.equals(Byte.class) || fieldType.equals(Short.class) || fieldType.equals(Integer.class) || fieldType.equals(Long.class)) {
+                val = fixZero(val, length, true);
+            } else if (fieldType.equals(String.class)||fieldType.equals(Date.class)) {
+                val = fixZero(val, length, false);
+            }
+        }
+
+        return val;
+    }
+
+    /***
+     * 将报文数据解析成javabean属性中的值
+     * @return
+     */
+    protected T resolve(LinkedHashMap<String, String> fieldsConfig, Map<String, Method> methods, Map<String, Field> fields, String datagram, Class<T> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, ParseException {
+        T result = clazz.newInstance();
+        Set<String> filedSet = fieldsConfig.keySet();
+        Iterator<String> it = filedSet.iterator();
+        int position = 0;
+
+        while (it.hasNext()) {
+            String fieldName = it.next();
+            Field field = fields.get(fieldName);
+            int valLen = Integer.parseInt(fieldsConfig.get(fieldName));
+            String val = datagram.substring(position, position + valLen);
+            Object valObj=getDatagramValue(val,field);
+            String getMethodName = fieldName + "_s";
+            Method setMethod = methods.get(getMethodName);
+            setMethod.invoke(result,valObj);
+            position+=valLen;
+        }
+
+        return result;
+    }
+
+    //获取报文中的字符串值，转换成javabean属性值
+    private Object getDatagramValue(String valueStr, Field field) throws ParseException {
+        Object value = null;
+        if (StringUtils.isNotEmpty(valueStr)) {
+            Class fieldType = field.getType();
+            if (fieldType.equals(Byte.class)) {
+                value = Byte.valueOf(valueStr);
+            } else if (fieldType.equals(Short.class)) {
+                value = Short.valueOf(valueStr);
+            } else if (fieldType.equals(Integer.class)) {
+                value = Integer.valueOf(valueStr);
+            } else if (fieldType.equals(Long.class)) {
+                value = Long.valueOf(valueStr);
+            }else if(fieldType.equals(String.class)){
+                value=valueStr;
+            }else if(fieldType.equals(Date.class)){
+                DateTimeFormat format=field.getAnnotation(DateTimeFormat.class);
+                String pattern=format.pattern();
+                DateUtil.parserStringToDate(valueStr, pattern);
+            }
+        }
+        return value;
+    }
+
+
+    /***
      * 获取javabean属性的get  set 方法
      * @param clazz
      * @return
@@ -40,8 +147,8 @@ public abstract class Resolver<T> {
     protected static Map<String, Method> getFieldGetSetMethods(Class clazz) throws IntrospectionException {
         Map<String, Method> methods = new HashMap<>();
         Class superClazz = clazz.getSuperclass();
-        getMethods(superClazz,methods);
-        getMethods(clazz,methods);
+        getMethods(superClazz, methods);
+        getMethods(clazz, methods);
         return methods;
     }
 
@@ -51,23 +158,23 @@ public abstract class Resolver<T> {
      * @return
      * @throws IntrospectionException
      */
-    protected static Map<String,Field> getFields(Class clazz) throws IntrospectionException {
+    protected static Map<String, Field> getFields(Class clazz) throws IntrospectionException {
         Map<String, Field> fields = new HashMap<>();
-        List<Field> filedList =new ArrayList<>();
-        Class parentClazz=clazz.getSuperclass();
+        List<Field> filedList = new ArrayList<>();
+        Class parentClazz = clazz.getSuperclass();
         filedList.addAll(Arrays.asList(parentClazz.getDeclaredFields()));
         filedList.addAll(Arrays.asList(clazz.getDeclaredFields()));
         Iterator<Field> it = filedList.iterator();
 
         while (it.hasNext()) {
-            Field field=it.next();
-            fields.put(field.getName(),field);
+            Field field = it.next();
+            fields.put(field.getName(), field);
         }
         return fields;
     }
 
-    private static void getMethods(Class clazz,Map<String,Method> methods) throws IntrospectionException {
-        List<Field> filedList =Arrays.asList(clazz.getDeclaredFields());
+    private static void getMethods(Class clazz, Map<String, Method> methods) throws IntrospectionException {
+        List<Field> filedList = Arrays.asList(clazz.getDeclaredFields());
         Iterator<Field> it = filedList.iterator();
         while (it.hasNext()) {
             String filedName = it.next().getName();
@@ -79,92 +186,11 @@ public abstract class Resolver<T> {
         }
     }
 
-    /***
-     * 解析javabean属性中的值到报文域
-     * @return
-     */
-    protected  String generate(LinkedHashMap<String, String> fieldsConfig,Map<String,Method> methods,Map<String,Field> fields,T t) throws InvocationTargetException, IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Set<String> filedSet = fieldsConfig.keySet();
-        Iterator<String> it = filedSet.iterator();
-
-            while (it.hasNext()) {
-                String fieldName=it.next();
-                String getMethodName = fieldName + "_g";
-                Method getMethod = methods.get(getMethodName);
-                Field field =fields.get(fieldName);
-                int valLen= Integer.parseInt(fieldsConfig.get(fieldName));
-                Object val=getMethod.invoke(t);
-                String resolvedVal=resolveFieldValue(val,field,valLen);
-                buffer.append(resolvedVal);
-            }
-
-        return null;
-    }
-
-    private String resolveFieldValue(Object value,Field field,int length) {
-        String val="";
-        if(value!=null){
-            val+=val.toString();
-        }
-
-        if(val.length()<length){
-            Class fieldType=field.getType();
-            if(fieldType.equals(Byte.class)||field.equals(Short.class)||field.equals(Integer.class)||field.equals(Long.class)){
-
-            }else if(fieldType.equals(String.class)){
-
-            }
-        }
-
-        return val;
-    }
-
-
-
-    protected  T resolve(LinkedHashMap<String, String> fieldsConfig,Map<String,Method> methods,Map<String,Field> fields,String datagram,Class<T> clazz) throws IllegalAccessException, InstantiationException {
-        T result=clazz.newInstance();
-        Set<String> filedSet = fieldsConfig.keySet();
-        Iterator<String> it = filedSet.iterator();
-        try {
-            while (it.hasNext()) {
-                String fieldName=it.next();
-                String getMethodName = fieldName + "_s";
-                Method getMethod = methods.get(getMethodName);
-                Field field =fields.get(fieldName);
-                int valLen= Integer.parseInt(fieldsConfig.get(fieldName));
-                Object val=getMethod.invoke(t);
-                String resolvedVal=resolveFieldValue(val,field,valLen);
-                buffer.append(resolvedVal);
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     /***
-     * 报文左补零
+     * 报文补零
      * @return
      */
-    private String interpolateZeroLeft() {
-
-
-        return "";
-    }
-
-    /***
-     * 报文右补零
-     * @return
-     */
-    private String interpolateZeroRigth(){
-        return "";
-    }
-
-
     protected String fixZero(String value, int length, boolean isLeft) {
         if (value.length() > length) {
             throw new BusinessException("值的长度超出限制");
@@ -172,7 +198,7 @@ public abstract class Resolver<T> {
         if (value.length() == length) {
             return value;
         }
-        String zeros = intArrToString(new int[length]);
+        String zeros = intArrToString(new int[length-value.length()]);
         if (isLeft) {
             return zeros + value;
         } else {
@@ -180,7 +206,7 @@ public abstract class Resolver<T> {
         }
     }
 
-    private  static String intArrToString(int a[]){
+    private String intArrToString(int a[]) {
         if (a == null)
             return "";
         int iMax = a.length - 1;
