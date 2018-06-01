@@ -82,11 +82,11 @@ public abstract class Resolver<T> {
      * 解析javabean属性中的值到报文域
      * @return
      */
-    protected  String generate(LinkedHashMap<String, String> fieldsConfig,Map<String,Method> methods,Map<String,Field> fields,T t){
+    protected  String generate(LinkedHashMap<String, String> fieldsConfig,Map<String,Method> methods,Map<String,Field> fields,T t) throws InvocationTargetException, IllegalAccessException {
         StringBuffer buffer = new StringBuffer();
         Set<String> filedSet = fieldsConfig.keySet();
         Iterator<String> it = filedSet.iterator();
-        try {
+
             while (it.hasNext()) {
                 String fieldName=it.next();
                 String getMethodName = fieldName + "_g";
@@ -97,11 +97,7 @@ public abstract class Resolver<T> {
                 String resolvedVal=resolveFieldValue(val,field,valLen);
                 buffer.append(resolvedVal);
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+
         return null;
     }
 
@@ -122,6 +118,32 @@ public abstract class Resolver<T> {
 
         return val;
     }
+
+
+
+    protected  T resolve(LinkedHashMap<String, String> fieldsConfig,Map<String,Method> methods,Map<String,Field> fields,String datagram,Class<T> clazz) throws IllegalAccessException, InstantiationException {
+        T result=clazz.newInstance();
+        Set<String> filedSet = fieldsConfig.keySet();
+        Iterator<String> it = filedSet.iterator();
+        try {
+            while (it.hasNext()) {
+                String fieldName=it.next();
+                String getMethodName = fieldName + "_s";
+                Method getMethod = methods.get(getMethodName);
+                Field field =fields.get(fieldName);
+                int valLen= Integer.parseInt(fieldsConfig.get(fieldName));
+                Object val=getMethod.invoke(t);
+                String resolvedVal=resolveFieldValue(val,field,valLen);
+                buffer.append(resolvedVal);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /***
      * 报文左补零
