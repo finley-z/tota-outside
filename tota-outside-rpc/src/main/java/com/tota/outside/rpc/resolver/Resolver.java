@@ -1,6 +1,7 @@
 package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.Message;
+import com.tota.se.common.exception.BusinessException;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -150,6 +151,8 @@ public abstract class Resolver<T> {
      * @return
      */
     private String interpolateZeroLeft() {
+
+
         return "";
     }
 
@@ -159,5 +162,35 @@ public abstract class Resolver<T> {
      */
     private String interpolateZeroRigth(){
         return "";
+    }
+
+
+    protected String fixZero(String value, int length, boolean isLeft) {
+        if (value.length() > length) {
+            throw new BusinessException("值的长度超出限制");
+        }
+        if (value.length() == length) {
+            return value;
+        }
+        String zeros = intArrToString(new int[length]);
+        if (isLeft) {
+            return zeros + value;
+        } else {
+            return value + zeros;
+        }
+    }
+
+    private  static String intArrToString(int a[]){
+        if (a == null)
+            return "";
+        int iMax = a.length - 1;
+        if (iMax == -1)
+            return "";
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; ; i++) {
+            b.append(a[i]);
+            if (i == iMax)
+                return b.toString();
+        }
     }
 }
