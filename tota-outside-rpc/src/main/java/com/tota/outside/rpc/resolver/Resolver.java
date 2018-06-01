@@ -102,7 +102,6 @@ public abstract class Resolver<T> {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -112,12 +111,13 @@ public abstract class Resolver<T> {
             val+=val.toString();
         }
 
-        Class fieldType=field.getType();
+        if(val.length()<length){
+            Class fieldType=field.getType();
+            if(fieldType.equals(Byte.class)||field.equals(Short.class)||field.equals(Integer.class)||field.equals(Long.class)){
 
-        if(fieldType.equals(Byte.class)||field.equals(Short.class)||field.equals(Integer.class)||field.equals(Long.class)){
+            }else if(fieldType.equals(String.class)){
 
-        }else if(fieldType.equals(String.class)){
-
+            }
         }
 
         return val;
