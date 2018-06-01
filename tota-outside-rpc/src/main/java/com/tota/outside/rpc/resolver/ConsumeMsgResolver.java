@@ -58,7 +58,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
             StringBuilder sb=new StringBuilder();
             for (Map.Entry<String, String> entry : fieldsConfig.entrySet()) {
                Object object=methods.get(entry.getKey() + "_g").invoke(signInMessage);
-                sb.append(fixZero((String)object,Integer.valueOf(entry.getValue()),true));
+
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
