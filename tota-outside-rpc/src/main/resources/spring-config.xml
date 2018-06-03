@@ -25,7 +25,7 @@
 
 	<import resource="spring/spring-aop.xml" />
 	<!--<import resource="spring/spring-mysql.xml" />-->
-	<import resource="spring/spring-redis.xml" />
+	<!--<import resource="spring/spring-redis.xml" />-->
 	<import resource="spring/spring-rpc/spring-rpc.xml" />
 	<!--<import resource="spring/spring-rpc/spring-rpc-consumer.xml" />-->
 	<import resource="spring/spring-rpc/spring-rpc-provider.xml" />
