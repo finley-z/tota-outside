@@ -58,7 +58,7 @@ public class SignInMsgResolver extends Resolver<SignInMessage> {
     @Override
     public SignInMessage resolveDatagram(String datagram) {
         try {
-            return resolve( fieldsConfig, methods,  fields,  datagram, SignInMessage.class);
+            return resolve(fieldsConfig,methods,fields,datagram,SignInMessage.class);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
