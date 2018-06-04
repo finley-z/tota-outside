@@ -3,11 +3,12 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
+
 	<bean id="socketPoolConfig" class="com.tota.outside.rpc.socket.SocketPoolConfig">
-		<property name="maxTotal" value="${redis.maxTotal}" />
-		<property name="maxIdle" value="${redis.maxIdle}" />
-		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+		<property name="maxTotal" value="20" />
+		<property name="maxIdle" value="10" />
+		<property name="maxWaitMillis" value="20" />
+		<property name="testOnBorrow" value="false" />
 	</bean>
 
 

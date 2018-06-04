@@ -7,18 +7,30 @@ import java.nio.channels.SocketChannel;
 
 public class SocketConnection {
     private String host;
-    private int port = 6379;
+    private int port ;
+    private int timeout = 2000;
+    private boolean broken = false;
+    private boolean keepAlive = true;
 
     private SocketChannel channel;
     private Buffer buffer;
 
-    private int timeout = 2000;
-    private boolean broken = false;
+    public SocketConnection(){
+
+    }
+
+    public SocketConnection(String host,int port,int timeout,boolean keepAlive){
+         this.host=host;
+         this.port=port;
+         this.timeout=timeout;
+         this.keepAlive=keepAlive;
+    }
 
 
     public String processRequest(String datagram){
 
         return null;
     }
+
 
 }

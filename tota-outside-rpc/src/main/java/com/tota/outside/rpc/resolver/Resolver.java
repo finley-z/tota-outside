@@ -35,10 +35,10 @@ public abstract class Resolver<T> {
     }
 
     //报文生成  class -- string
-    protected abstract String generateDatagram(T t);
+    public abstract String generateDatagram(T t);
 
     //报文解析   string --class
-    protected abstract T resolveDatagram(String datagram);
+    public abstract T resolveDatagram(String datagram);
 
 
     /***

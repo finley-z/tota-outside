@@ -14,8 +14,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     private int timeout;
 
     public SocketConnectionFactory() {
-        this.hostName = "localhost";
-        this.port = 6379;
+        this.keepAlive=true;
         this.timeout = 2000;
     }
 
@@ -23,7 +22,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     @Override
     public PooledObject<SocketConnection> makeObject() throws Exception {
         log.info("======创建Socket连接对象======");
-        SocketConnection connection=new SocketConnection();
+        SocketConnection connection=new SocketConnection(hostName,port,timeout,keepAlive);
         return new DefaultPooledObject<>(connection);
     }
 
