@@ -1,5 +1,6 @@
 package com.tota.outside.rpc;
 
+import com.tota.outside.rpc.socket.ConnectionTemplet;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Main {
@@ -11,6 +12,8 @@ public class Main {
     public static void main(String[] args) {
         context = new ClassPathXmlApplicationContext(new String[]{configPath});
         context.start();
+        ConnectionTemplet templet= (ConnectionTemplet) context.getBean("connectionTemplet");
+        templet.processRequest("geg");
         synchronized (Main.class) {
             while (true) {
                 try {
@@ -20,5 +23,6 @@ public class Main {
                 }
             }
         }
+
     }
 }

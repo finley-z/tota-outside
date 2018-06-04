@@ -3,6 +3,7 @@ package com.tota.outside.rpc.socket;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
+import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 public class SocketConnectionFactory implements PooledObjectFactory<SocketConnection> {
     private static final org.apache.commons.logging.Log log = LogFactory.getLog(SocketConnectionFactory.class);
@@ -13,21 +14,23 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     private int timeout;
 
     public SocketConnectionFactory() {
-        this.hostName = "localhost";
-        this.port = 6379;
+        this.keepAlive=true;
         this.timeout = 2000;
     }
 
 
     @Override
-    public PooledObject makeObject() throws Exception {
+    public PooledObject<SocketConnection> makeObject() throws Exception {
         log.info("======创建Socket连接对象======");
-        return null;
+        SocketConnection connection=new SocketConnection(hostName,port,timeout,keepAlive);
+        return new DefaultPooledObject<>(connection);
     }
 
     @Override
     public void destroyObject(PooledObject<SocketConnection> pooledObject) throws Exception {
         log.info("======销毁Socket连接对象======");
+        passivateObject(pooledObject);
+        pooledObject.markAbandoned();
     }
 
 
@@ -101,4 +104,5 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     public void setKeepAlive(boolean keepAlive) {
         this.keepAlive = keepAlive;
     }
+
 }
