@@ -2,7 +2,10 @@ package com.tota.outside.controller;
 
 
 import com.tota.outside.rpc.api.service.DubboTestService;
+import com.tota.se.core.context.SpringContextHolder;
+import com.tota.se.rpc.dubbo.client.DubboClient;
 import com.tota.se.rpc.dubbo.client.DubboClientFactory;
+import com.tota.se.rpc.dubbo.provider.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,8 @@ public class DubboTestController {
     private DubboClientFactory clientFactory;
 
     public DubboTestService getCallbackRpcService() {
-        return clientFactory.getDubboClient("dubboTestService");
+       return clientFactory.getDubboClient("dubboTestService");
+
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)

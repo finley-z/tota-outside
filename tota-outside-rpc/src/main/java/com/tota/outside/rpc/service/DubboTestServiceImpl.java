@@ -13,6 +13,7 @@ import java.util.Map;
 public class DubboTestServiceImpl implements DubboTestService {
     @Override
     public String testDubbo() {
+        System.out.println("client is coming ****************************************************");
         return "dubbo interface is running";
     }
 
