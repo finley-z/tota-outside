@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	     http://code.alibabatech.com/schema/dubbo
+	     http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <bean class="com.tota.se.rpc.dubbo.provider.DubboService" id="dubboTestService">
+        <property name="interfaceName" value="com.tota.outside.rpc.api.service.DubboTestService" />
+        <property name="interfaceRef" ref="dubboTestServiceImpl" />
+        <property name="protocols" value="${dubbo.protocols}" />
+        <property name="owner" value="xiaosc" />
+        <property name="timeout" value="45000" />
+        <property name="retries" value="0" />
+    </bean>
+
+    <bean id="dynamicDubboProvider" class="com.tota.se.rpc.dubbo.source.DynamicDubboProvider">
+        <property name="openLog" value="${logback.dubbo.openLog}" />
+    </bean>
+
+    <bean id="dynamicCreateDubboProviderManager" class="com.tota.se.rpc.dubbo.source.DynamicCreateDubboProviderManager">
+        <property name="dynamicDubboProvider" ref="dynamicDubboProvider" />
+    </bean>
+	  
+</beans>

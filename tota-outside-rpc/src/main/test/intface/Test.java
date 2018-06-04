@@ -27,7 +27,7 @@ public class Test {
             socketChannel.configureBlocking(false);
             socketChannel.connect(new InetSocketAddress("172.18.1.116", 10001));
             CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
-            while (!socketChannel.finishConnect()) {
+            while (!socketChannel.isConnected()) {
                 System.out.println("等待非阻塞连接建立....");
                 try {
                     Thread.sleep(10);
