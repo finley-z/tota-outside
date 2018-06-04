@@ -13,7 +13,11 @@ public class Main {
         context = new ClassPathXmlApplicationContext(new String[]{configPath});
         context.start();
         ConnectionTemplet templet= (ConnectionTemplet) context.getBean("connectionTemplet");
-        templet.processRequest("geg");
+        try {
+            templet.processRequest("geg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         synchronized (Main.class) {
             while (true) {
                 try {
