@@ -1,4 +1,4 @@
-package com.tota.outside.rpc.resolver.connection;
+package com.tota.outside.rpc.socket;
 
 import java.net.Socket;
 import java.nio.Buffer;
@@ -16,5 +16,9 @@ public class SocketConnection {
     private boolean broken = false;
 
 
+    public String processRequest(String datagram){
+
+        return null;
+    }
 
 }
