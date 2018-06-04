@@ -19,7 +19,7 @@ public class SocketConnection {
     private String host;
     private int port;
     private int timeout = 2000;
-    private boolean broken = false;
+    private boolean idle = true;
     private boolean keepAlive = true;
 
     private SocketChannel channel;
@@ -61,6 +61,7 @@ public class SocketConnection {
         }
         return readMsg;
     }
+
 
     public void doConnect(SelectionKey key, String datagram) throws IOException {
         SocketChannel clientChannel = (SocketChannel) key.channel();

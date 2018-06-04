@@ -35,10 +35,10 @@ public abstract class Resolver<T> {
     }
 
     //报文生成  class -- string
-    public abstract String generateDatagram(T t);
+    public abstract String generateDatagram(T t) throws InvocationTargetException, IllegalAccessException, Exception;
 
     //报文解析   string --class
-    public abstract T resolveDatagram(String datagram);
+    public abstract T resolveDatagram(String datagram) throws InvocationTargetException, InstantiationException, ParseException, IllegalAccessException, Exception;
 
 
     /***

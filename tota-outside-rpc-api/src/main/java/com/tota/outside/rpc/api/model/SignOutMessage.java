@@ -1,5 +1,7 @@
 package com.tota.outside.rpc.api.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class SignOutMessage extends Message{
@@ -11,6 +13,8 @@ public class SignOutMessage extends Message{
     private Long termId;
     private Long operId;
     private Long edCardId;
+
+    @DateTimeFormat(pattern="yyyyMMdd")
     private Date settDate;
     private Integer batchNo;
 

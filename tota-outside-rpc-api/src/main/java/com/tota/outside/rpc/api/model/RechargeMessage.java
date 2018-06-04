@@ -1,5 +1,7 @@
 package com.tota.outside.rpc.api.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class RechargeMessage extends Message {
@@ -14,39 +16,45 @@ public class RechargeMessage extends Message {
     private Long operId;
     private Long edCardId;
 
-    private Long cardId;
-    private String cardAuthCode;
+    private Long    cardId;
+    private String  cardAuthCode;
     private Integer cardCnt;
-    private Byte cardMKnd;
-    private Byte cardSKnd;
-    private Byte cardModel;
-    private Short reloadCnt;
-    private Long befBalance;
-    private Long origAmt;
-    private Long txnAmt;
-    private Long handingCharge;
-    private Long deposit;
-    private Long cardValDate;
-    private Long tradeBeginDate;
-    private Long tradeEndDate;
-    private Date txnDate;
-    private Date txnTime;
-    private Short cityCode;
-    private Byte cardVerNo;
-    private Date settDate;
+    private Byte    cardMKnd;
+    private Byte    cardSKnd;
+    private Byte    cardModel;
+    private Short   reloadCnt;
+    private Long    befBalance;
+    private Long    origAmt;
+    private Long    txnAmt;
+    private Long    handingCharge;
+    private Long    deposit;
+    private Long    cardValDate;
+    private Long    tradeBeginDate;
+    private Long    tradeEndDate;
+
+    @DateTimeFormat(pattern="yyyyMMdd")
+    private Date    txnDate;
+
+    @DateTimeFormat(pattern="HHmmss")
+    private Date    txnTime;
+    private Short   cityCode;
+    private Byte    cardVerNo;
+
+    @DateTimeFormat(pattern="yyyyMMdd")
+    private Date    settDate;
     private Integer batchNo;
-    private String authSeq;
-    private Long limitedAuthSeql;
-    private Long lastPosSvSeq;
-    private Short lastTxnType;
-    private Long lastPosId;
-    private Long LastTxnAmt;
+    private String  authSeq;
+    private Long    limitedAuthSeql;
+    private Long    lastPosSvSeq;
+    private Short   lastTxnType;
+    private Long    lastPosId;
+    private Long    LastTxnAmt;
     private Integer lastCrdCnt;
     private Integer lastTxnTime;
     private Integer lastaftamt;
     private Integer lasttac;
-    private String reserved;
-    private String tac;
+    private String  reserved;
+    private String  tac;
     private Integer txnResponse;
 
     public Integer getUnitId() {

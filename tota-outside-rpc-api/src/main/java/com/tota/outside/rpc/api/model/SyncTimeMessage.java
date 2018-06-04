@@ -1,8 +1,12 @@
 package com.tota.outside.rpc.api.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class SyncTimeMessage extends Message {
+
+    @DateTimeFormat(pattern="yyyyMMddHHmmss")
     private Date locDateTime;
     private Long posId;
     private Long samId;

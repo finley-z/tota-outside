@@ -1,6 +1,7 @@
 package com.tota.outside.rpc.api.model;
 
 import org.omg.PortableInterceptor.INACTIVE;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -22,6 +23,7 @@ public class OperateMessage extends Message {
     private Byte transType;
     private String cardCSN;
     private String cardMac;
+    @DateTimeFormat(pattern="yyyyMMddHHmmss")
     private Date sysDatetime;
     private Byte keyCnt;
     private String sectorID;
@@ -42,6 +44,7 @@ public class OperateMessage extends Message {
     private String command;
     private String dicMac;
     private String divData;
+    @DateTimeFormat(pattern="yyyyMMdd")
     private Date settDate;
     private Integer batchNo;
     private Long authSeq;
