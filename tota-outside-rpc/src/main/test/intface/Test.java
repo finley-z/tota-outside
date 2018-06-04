@@ -1,7 +1,8 @@
 package intface;
 
-import com.tota.outside.rpc.api.model.SignInMessage;
 import com.tota.outside.rpc.resolver.SignInMsgResolver;
+import com.tota.outside.rpc.response.ResponseStateParser;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,12 +11,11 @@ import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.util.Date;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
     SocketChannel socketChannel = null;
+    private static final org.apache.commons.logging.Log log = LogFactory.getLog(Test.class);
 
     public void signIn(String msg) {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -27,7 +27,7 @@ public class Test {
             socketChannel.configureBlocking(false);
             socketChannel.connect(new InetSocketAddress("172.18.1.116", 10001));
             CharsetEncoder encoder = Charset.forName("UTF-8").newEncoder();
-            while (!socketChannel.isConnected()) {
+            while (!socketChannel.finishConnect()) {
                 System.out.println("等待非阻塞连接建立....");
                 try {
                     Thread.sleep(10);
@@ -36,7 +36,7 @@ public class Test {
                 }
             }
             if (socketChannel.finishConnect()) {
-                    System.out.println("等待非阻塞连接建立....");
+                    System.out.println("等待非阻塞连接建立1....");
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
@@ -101,36 +101,38 @@ public class Test {
                 "0000000000000000000000000000000000000000000000000000000000000000000000";
 //        SignInMessage msg = resolver.resolveDatagram(datagram);
 //        String res=resolver.generateDatagram(msg);
-        Date date=new Date();
+//        Date date=new Date();
+//
+//        SignInMessage msg=new SignInMessage();
+//        msg.setDataLength(305);
+//        msg.setPackageSyncMsg("55");
+//        msg.setPackageSyncMsg("573108440");
+//        msg.setPackageCompress((byte) 0);
+//        msg.setPackageEncrypt((byte) 0);
+//        msg.setTxVersion((byte) 1);
+//        msg.setPackageMsgType("5000");
+//
+//        msg.setUnitId(54000028);
+//        msg.setTxnMode((byte) 1);
+//        msg.setPosId(540280000001L);
+//        msg.setTermId(0L);
+//
+//        msg.setOperId(0L);
+//
+//        msg.setTxVersion((byte) 10);
+//        msg.setTxMsgType((short) 2051);
+//        msg.setTxMsgDateTime(date);
+//
+//        msg.setTxnMode((byte)0);
+//        msg.setPosId(10L);
+//        msg.setSettDate(date);
+//        msg.setSysDateTime(date);
+//
+//        String res=resolver.generateDatagram(msg);
+//        System.out.println("报文："+res);
+//        new Test().signIn(res);
+        ResponseStateParser.Status status= ResponseStateParser.getResponseState("24003");
 
-        SignInMessage msg=new SignInMessage();
-        msg.setDataLength(305);
-        msg.setPackageSyncMsg("55");
-        msg.setPackageSyncMsg("573108440");
-        msg.setPackageCompress((byte) 0);
-        msg.setPackageEncrypt((byte) 0);
-        msg.setTxVersion((byte) 1);
-        msg.setPackageMsgType("5000");
-
-        msg.setUnitId(54000028);
-        msg.setTxnMode((byte) 1);
-        msg.setPosId(540280000001L);
-        msg.setTermId(0L);
-
-        msg.setOperId(0L);
-
-        msg.setTxVersion((byte) 10);
-        msg.setTxMsgType((short) 2051);
-        msg.setTxMsgDateTime(date);
-
-        msg.setTxnMode((byte)0);
-        msg.setPosId(10L);
-        msg.setSettDate(date);
-        msg.setSysDateTime(date);
-
-        String res=resolver.generateDatagram(msg);
-        System.out.println("报文："+res);
-        new Test().signIn(res);
-
+        System.out.println("test");
     }
 }
