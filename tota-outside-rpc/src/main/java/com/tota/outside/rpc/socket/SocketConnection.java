@@ -9,7 +9,7 @@ public class SocketConnection {
     private String host;
     private int port ;
     private int timeout = 2000;
-    private boolean broken = false;
+    private boolean idle = true;
     private boolean keepAlive = true;
 
     private SocketChannel channel;
@@ -25,6 +25,7 @@ public class SocketConnection {
          this.timeout=timeout;
          this.keepAlive=keepAlive;
     }
+
 
 
     public String processRequest(String datagram){
