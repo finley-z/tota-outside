@@ -4,10 +4,10 @@
 		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
 	<bean id="socketPoolConfig" class="com.tota.outside.rpc.socket.SocketPoolConfig">
-		<property name="maxTotal" value="${redis.maxTotal}" />
-		<property name="maxIdle" value="${redis.maxIdle}" />
-		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+		<property name="maxTotal" value="1" />
+		<property name="maxIdle" value="1" />
+		<property name="maxWaitMillis" value="1" />
+		<property name="testOnBorrow" value="true" />
 	</bean>
 
 
