@@ -36,7 +36,6 @@ public class SocketConnection {
         this.keepAlive = keepAlive;
     }
 
-
     public String processRequest(String datagram) throws IOException {
         selector = Selector.open();
         channel = SocketChannel.open();
@@ -84,8 +83,8 @@ public class SocketConnection {
         }
         byte[] data = byteBuffer.array();
         String msg = new String(data).trim();
-        clientChannel.close();
-        selector.close();
+//        clientChannel.close();
+//        selector.close();
         return msg;
     }
 }

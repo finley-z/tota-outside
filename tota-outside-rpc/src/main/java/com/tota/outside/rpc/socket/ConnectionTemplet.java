@@ -27,7 +27,7 @@ public class ConnectionTemplet {
         //请求完成放回连接池
         pool.returnObject(socketConnection);
 
-        return null;
+        return result;
     }
 
 }
