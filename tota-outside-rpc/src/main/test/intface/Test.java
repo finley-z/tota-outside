@@ -1,5 +1,6 @@
 package intface;
 
+import com.tota.outside.rpc.api.model.SignInMessage;
 import com.tota.outside.rpc.resolver.SignInMsgResolver;
 import com.tota.outside.rpc.response.ResponseStateParser;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +12,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Test {
@@ -92,45 +94,44 @@ public class Test {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         SignInMsgResolver resolver = new SignInMsgResolver();
 
         String datagram = "03050000000000000001500010205120140819003500000000000054000017010000000000000" +
                 "000000000000000000000000000000000001100000008581100000008580000000000000000000000" +
                 "000000000000000000000000000000000000000000000000000000000000000000000000000000000" +
                 "0000000000000000000000000000000000000000000000000000000000000000000000";
-//        SignInMessage msg = resolver.resolveDatagram(datagram);
-//        String res=resolver.generateDatagram(msg);
-//        Date date=new Date();
-//
-//        SignInMessage msg=new SignInMessage();
+
+        Date date=new Date();
+
+        SignInMessage msg=new SignInMessage();
 //        msg.setDataLength(305);
-//        msg.setPackageSyncMsg("55");
-//        msg.setPackageSyncMsg("573108440");
-//        msg.setPackageCompress((byte) 0);
-//        msg.setPackageEncrypt((byte) 0);
-//        msg.setTxVersion((byte) 1);
-//        msg.setPackageMsgType("5000");
-//
-//        msg.setUnitId(54000028);
-//        msg.setTxnMode((byte) 1);
-//        msg.setPosId(540280000001L);
-//        msg.setTermId(0L);
-//
-//        msg.setOperId(0L);
-//
-//        msg.setTxVersion((byte) 10);
-//        msg.setTxMsgType((short) 2051);
-//        msg.setTxMsgDateTime(date);
-//
-//        msg.setTxnMode((byte)0);
-//        msg.setPosId(10L);
-//        msg.setSettDate(date);
-//        msg.setSysDateTime(date);
-//
-//        String res=resolver.generateDatagram(msg);
-//        System.out.println("报文："+res);
-//        new Test().signIn(res);
+        msg.setPackageSyncMsg("55");
+        msg.setPackageSyncMsg("573108440");
+        msg.setPackageCompress((byte) 0);
+        msg.setPackageEncrypt((byte) 0);
+        msg.setTxVersion((byte) 1);
+        msg.setPackageMsgType("5000");
+
+        msg.setUnitId(54000028);
+        msg.setTxnMode((byte) 1);
+        msg.setPosId(540280000001L);
+        msg.setTermId(0L);
+
+        msg.setOperId(0L);
+
+        msg.setTxVersion((byte) 10);
+        msg.setTxMsgType((short) 2051);
+        msg.setTxMsgDateTime(date);
+
+        msg.setTxnMode((byte)0);
+        msg.setPosId(10L);
+        msg.setSettDate(date);
+        msg.setSysDateTime(date);
+
+        String res=resolver.generateDatagram(msg);
+        System.out.println("报文："+res);
+        new Test().signIn(res);
         ResponseStateParser.Status status= ResponseStateParser.getResponseState("24003");
 
         System.out.println("test");
