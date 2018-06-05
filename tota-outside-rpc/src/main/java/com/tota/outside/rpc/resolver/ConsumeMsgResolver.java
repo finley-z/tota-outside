@@ -61,7 +61,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
      * @return
      */
     @Override
-    protected String generateDatagram(ConsumeMessage consumeMessage) {
+    public String generateDatagram(ConsumeMessage consumeMessage) {
         StringBuilder sb = new StringBuilder();
         try {
             for (Map.Entry<String, String> entry : fieldsConfig.entrySet()) {
@@ -83,7 +83,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
      * @return
      */
     @Override
-    protected ConsumeMessage resolveDatagram(String consumeMessage) {
+    public ConsumeMessage resolveDatagram(String consumeMessage) {
         char[] c = consumeMessage.toCharArray();
         if (c == null) {
             return null;
