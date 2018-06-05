@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="${scan:-true}" scanPeriod="${scanPeriod:-60 second}" debug="false">
+
+	<conversionRule conversionWord="msgno" converterClass="com.tota.se.common.util.log.LogMsgNoConverter" />
+	
+	<property resource="config.properties" />
+
+	<appender name="all"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<File>${logback.file.path}/all.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logback.file.path}/all.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%msgno][%thread][%-5level][%logger]-%msg%n</Pattern>
+		</layout>
+	</appender>
+	<!--<appender name="sql"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<File>${logback.file.path}/sql.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logback.file.path}/sql.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%msgno][%thread][%-5level][%logger]-%msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="mq_message"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<File>${logback.file.path}/mq_message.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logback.file.path}/mq_message.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%msgno][%thread][%-5level][%logger]-%msg%n</Pattern>
+		</layout>
+	</appender>-->
+	<appender name="dubbo"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<File>${logback.file.path}/dubbo.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logback.file.path}/dubbo.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%msgno][%thread][%-5level][%logger]-%msg%n</Pattern>
+		</layout>
+	</appender>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%msgno][%thread][%-5level][%logger]-%msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+	<jmxConfigurator></jmxConfigurator>
+
+	<!--<logger name="java.sql.Connection" level="${logback.sql.level}" />
+	<logger name="java.sql.Statement" level="${logback.sql.level}" />
+	<logger name="java.sql.PreparedStatement" level="${logback.sql.level}" />
+	<logger name="java.sql.ResultSet" level="${logback.sql.level}" />
+	<logger name="com.tota.se.dataaccess.mysql.source.interceptor.SqlLogInterceptor" level="${logback.sql.level}">
+		<appender-ref ref="sql" />
+	</logger>
+	<logger name="com.tota.se.core.mq.consumer.MqMessageListener" level="${logback.mq.level}">
+		<appender-ref ref="mq_message" />
+	</logger>
+	<logger name="com.tota.se.core.mq.source.DynamicMqMessageSender" level="${logback.mq.level}">
+		<appender-ref ref="mq_message" />
+	</logger>-->
+	<logger name="com.tota.se.rpc.dubbo.client.DubboClientFilter" level="${logback.dubbo.level}">
+		<appender-ref ref="dubbo" />
+	</logger>
+	<logger name="com.tota.se.rpc.dubbo.provider.DubboServiceFactory" level="${logback.dubbo.level}">
+		<appender-ref ref="dubbo" />
+	</logger>
+	
+	<root level="${logback.root.level}">
+		<appender-ref ref="console" />
+		<appender-ref ref="all" />
+	</root>
+</configuration>  

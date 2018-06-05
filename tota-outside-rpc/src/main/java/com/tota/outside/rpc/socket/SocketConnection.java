@@ -84,8 +84,8 @@ public class SocketConnection {
         }
         byte[] data = byteBuffer.array();
         String msg = new String(data).trim();
-        clientChannel.close();
-        selector.close();
+//        clientChannel.close();
+//        selector.close();
         return msg;
     }
 }
