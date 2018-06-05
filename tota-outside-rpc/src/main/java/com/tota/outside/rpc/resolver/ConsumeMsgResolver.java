@@ -1,20 +1,20 @@
 package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.ConsumeMessage;
-import com.tota.se.common.exception.BusinessException;
 
 import java.beans.IntrospectionException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
 
     private static LinkedHashMap<String, String> fieldsConfig = new LinkedHashMap<>();
     private static Map<String, Method> methods;
+    private static Map<String, Field> fields;
 
     static {
         fieldsConfig.putAll(headerConfigs);
@@ -48,6 +48,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
         fieldsConfig.put("responseCode_Body", "5");
         try {
             methods = getFieldGetSetMethods(ConsumeMessage.class);
+            fields = getFields(ConsumeMessage.class);
         } catch (IntrospectionException e) {
             e.printStackTrace();
         }
@@ -61,11 +62,12 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
      * @return
      */
     @Override
-    public String generateDatagram(ConsumeMessage consumeMessage) {
-        StringBuilder sb = new StringBuilder();
+    public String generateDatagram(ConsumeMessage consumeMessage) throws Exception {
+        return generate(fieldsConfig, methods, fields, consumeMessage);
+     /*   StringBuilder sb = new StringBuilder();
         try {
             for (Map.Entry<String, String> entry : fieldsConfig.entrySet()) {
-                Object object = methods.get(entry.getKey() + "_g").invoke(consumeMessage);
+                Object object = fields.get(entry.getKey() + "_g").invoke(consumeMessage);
                 sb.append(fixZero((String) object, Integer.valueOf(entry.getValue()), true));
             }
         } catch (IllegalAccessException e) {
@@ -73,18 +75,19 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        return sb.toString();
+        return sb.toString();*/
     }
 
     /**
      * 报文解析
      *
-     * @param consumeMessage
+     * @param datagram
      * @return
      */
     @Override
-    public ConsumeMessage resolveDatagram(String consumeMessage) {
-        char[] c = consumeMessage.toCharArray();
+    public ConsumeMessage resolveDatagram(String datagram) throws Exception {
+        return resolve(fieldsConfig, methods, fields, datagram, ConsumeMessage.class);
+        /*char[] c = consumeMessage.toCharArray();
         if (c == null) {
             return null;
         }
@@ -149,7 +152,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
         }catch (NoSuchFieldException e){
             e.printStackTrace();
         }
-        return bean;
+        return bean;*/
     }
 
     public static String charToString(char[] a) {
@@ -185,9 +188,9 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
         }
     }
 
-    public  static  void  main(String[] args){
+    public static void main(String[] args) {
         try {
-            Field   field = ConsumeMessage.class.getDeclaredField("befBalance");
+            Field field = ConsumeMessage.class.getDeclaredField("befBalance");
             System.out.println(field.getGenericType());
 //            Field   field1 = ConsumeMessage.class.getSuperclass().getDeclaredField("befBalance");
 //            System.out.println(field1.getGenericType());

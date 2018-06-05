@@ -1,5 +1,9 @@
 package com.tota.outside.rpc.api.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 public class ConsumeMessage extends Message {
 
     private Integer unitId;
@@ -20,11 +24,14 @@ public class ConsumeMessage extends Message {
     private Integer txnAmt;
     private Integer origAmt;
     private Integer cardValDate;
-    private String txnDate;
-    private String txnTime;
+    @DateTimeFormat(pattern = "yyyyMMdd")
+    private Date txnDate;
+    @DateTimeFormat(pattern="HHmmss")
+    private Date txnTime;
     private Short cityCode;
     private Short cardVerNo;
-    private String settDate;
+    @DateTimeFormat(pattern="yyyyMMdd")
+    private Date settDate;
     private Integer batchNo;
     private Long authSeq;
     private String reserved;
@@ -175,19 +182,19 @@ public class ConsumeMessage extends Message {
         this.cardValDate = cardValDate;
     }
 
-    public String getTxnDate() {
+    public Date getTxnDate() {
         return txnDate;
     }
 
-    public void setTxnDate(String txnDate) {
+    public void setTxnDate(Date txnDate) {
         this.txnDate = txnDate;
     }
 
-    public String getTxnTime() {
+    public Date getTxnTime() {
         return txnTime;
     }
 
-    public void setTxnTime(String txnTime) {
+    public void setTxnTime(Date txnTime) {
         this.txnTime = txnTime;
     }
 
@@ -207,11 +214,11 @@ public class ConsumeMessage extends Message {
         this.cardVerNo = cardVerNo;
     }
 
-    public String getSettDate() {
+    public Date getSettDate() {
         return settDate;
     }
 
-    public void setSettDate(String settDate) {
+    public void setSettDate(Date settDate) {
         this.settDate = settDate;
     }
 
