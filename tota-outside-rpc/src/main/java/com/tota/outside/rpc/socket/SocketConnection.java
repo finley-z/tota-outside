@@ -43,9 +43,8 @@ public class SocketConnection {
         channel.configureBlocking(false);
         channel.connect(new InetSocketAddress(host, port));
         channel.register(selector, SelectionKey.OP_CONNECT);
-        new Timer().schedule(tt, timeout);
         String readMsg = "";
-        while (selector.select() > 0) {
+        while (selector.select(10000) > 0) {
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keys.iterator();
             while (iterator.hasNext()) {
@@ -89,19 +88,4 @@ public class SocketConnection {
         selector.close();
         return msg;
     }
-
-    TimerTask tt = new TimerTask() {
-        @Override
-        public void run() {
-            if (channel == null || !channel.isConnected()) {
-                try {
-                    throw new SocketTimeoutException("连接超时");
-                } catch (SocketTimeoutException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
-
-
 }
