@@ -60,9 +60,14 @@ public abstract class Resolver<T> {
             String resolvedVal = getFieldValue(val, field, valLen);
             buffer.append(resolvedVal);
         }
-
+        //计算报文长度
+        int valLen=Integer.parseInt(fieldsConfig.get("dataLength"));
+        int dataLen = buffer.length()-valLen;
+        String lenVal = getFieldValue(dataLen, fields.get("dataLength"), valLen);
+        buffer.replace(0,4,lenVal);
         return buffer.toString();
     }
+
     //获取javabean属性值，转换成字符串
     private String getFieldValue(Object value, Field field, int length) {
         String val = "";
@@ -137,6 +142,38 @@ public abstract class Resolver<T> {
         return value;
     }
 
+    /***
+     * 报文补零
+     * @return
+     */
+    protected String fixZero(String value, int length, boolean isLeft) {
+        if (value.length() > length) {
+            throw new BusinessException("值的长度超出限制");
+        }
+        if (value.length() == length) {
+            return value;
+        }
+        String zeros = intArrToString(new int[length-value.length()]);
+        if (isLeft) {
+            return zeros + value;
+        } else {
+            return value + zeros;
+        }
+    }
+
+    private String intArrToString(int a[]) {
+        if (a == null)
+            return "";
+        int iMax = a.length - 1;
+        if (iMax == -1)
+            return "";
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; ; i++) {
+            b.append(a[i]);
+            if (i == iMax)
+                return b.toString();
+        }
+    }
 
     /***
      * 获取javabean属性的get  set 方法
@@ -186,37 +223,4 @@ public abstract class Resolver<T> {
         }
     }
 
-
-    /***
-     * 报文补零
-     * @return
-     */
-    protected String fixZero(String value, int length, boolean isLeft) {
-        if (value.length() > length) {
-            throw new BusinessException("值的长度超出限制");
-        }
-        if (value.length() == length) {
-            return value;
-        }
-        String zeros = intArrToString(new int[length-value.length()]);
-        if (isLeft) {
-            return zeros + value;
-        } else {
-            return value + zeros;
-        }
-    }
-
-    private String intArrToString(int a[]) {
-        if (a == null)
-            return "";
-        int iMax = a.length - 1;
-        if (iMax == -1)
-            return "";
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; ; i++) {
-            b.append(a[i]);
-            if (i == iMax)
-                return b.toString();
-        }
-    }
 }

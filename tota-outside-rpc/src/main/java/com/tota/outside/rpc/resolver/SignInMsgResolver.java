@@ -45,7 +45,7 @@ public class SignInMsgResolver extends Resolver<SignInMessage> {
 
     @Override
     public String generateDatagram(SignInMessage signInMessage) throws Exception {
-        return generate( fieldsConfig, methods, fields,signInMessage);
+        return generate(fieldsConfig, methods, fields,signInMessage);
     }
 
     @Override
