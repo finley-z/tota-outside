@@ -29,6 +29,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     @Override
     public void destroyObject(PooledObject<SocketConnection> pooledObject) throws Exception {
         log.info("======销毁Socket连接对象======");
+        //释放连接，关闭buffer等
         passivateObject(pooledObject);
         pooledObject.markAbandoned();
     }
@@ -45,7 +46,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
     public boolean validateObject(PooledObject<SocketConnection> pooledObject) {
         log.debug("======判断Socket连接对象是否有效======");
 
-        return false;
+        return true;
     }
 
     /***

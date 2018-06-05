@@ -36,7 +36,6 @@ public class SocketConnection {
         this.keepAlive = keepAlive;
     }
 
-
     public String processRequest(String datagram) throws IOException {
         selector = Selector.open();
         channel = SocketChannel.open();
