@@ -80,11 +80,11 @@ public class MyNioServer {
         SocketChannel clientChannel = (SocketChannel) key.channel();
         ByteBuffer byteBuffer = ByteBuffer.allocate(BUF_SIZE);
         String info = "030500000000000000015000102051201408190035000000000000540000170100000000000000000000000000000000000000000000000011000000085811000000085800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-        byteBuffer.clear();
-        byteBuffer.put(info.getBytes("UTF-8"));
-        while (byteBuffer.hasRemaining()) {
-            clientChannel.write(byteBuffer);
-        }
+//        byteBuffer.clear();
+//        byteBuffer.put(info.getBytes("UTF-8"));
+//        byteBuffer.flip();
+        clientChannel.write(ByteBuffer.wrap(new String(info).getBytes("UTF-8")));
+
     }
 
     public static void main(String[] args) throws IOException {

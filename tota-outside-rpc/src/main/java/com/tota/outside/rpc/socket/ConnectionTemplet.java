@@ -40,7 +40,7 @@ public class ConnectionTemplet {
         ClassPathXmlApplicationContext  context = new ClassPathXmlApplicationContext(new String[]{configPath});
         context.start();
         try {
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
