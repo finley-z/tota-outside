@@ -1,5 +1,10 @@
 package com.tota.outside.rpc.socket;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.sql.Time;
+import java.util.concurrent.TimeUnit;
+
 public class ConnectionTemplet {
 
     private SocketPool pool;
@@ -28,6 +33,24 @@ public class ConnectionTemplet {
         pool.returnObject(socketConnection);
 
         return null;
+    }
+
+    public static  void  main(String [] args){
+         String configPath = "classpath*:spring-config.xml";
+        ClassPathXmlApplicationContext  context = new ClassPathXmlApplicationContext(new String[]{configPath});
+        context.start();
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ConnectionTemplet connectionTemplet =(ConnectionTemplet)context.getBean("connectionTemplet");
+        try {
+            String result= connectionTemplet.processRequest("030557310844000000005000102051201806050243270000000000540000280000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000201806050000002018060514432700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+            System.out.println("server message"+result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
