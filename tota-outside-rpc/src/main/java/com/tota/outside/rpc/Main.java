@@ -46,10 +46,11 @@ public class Main {
 
         try {
             String res=resolver.generateDatagram(msg);
-            System.out.println("报文："+res);
+            System.out.println("请求报文："+res);
 //            ResponseStateParser.Status status= ResponseStateParser.getResponseState("24003");
             ConnectionTemplet templet= (ConnectionTemplet) context.getBean("connectionTemplet");
            String response= templet.processRequest(res);
+           System.out.println("响应报文:"+response);
            SignInMessage responseMsg=resolver.resolveDatagram(response);
         } catch (Exception e) {
             e.printStackTrace();

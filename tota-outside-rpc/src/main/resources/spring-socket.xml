@@ -8,6 +8,7 @@
         <property name="maxIdle" value="${socket.pool.maxIdle}"/>
         <property name="maxWaitMillis" value="${socket.pool.maxWaitMillis}"/>
         <property name="testOnBorrow" value="${socket.pool.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${socket.pool.testWhileIdle}"/>
     </bean>
 
     <bean id="socketConnectionFactory" class="com.tota.outside.rpc.socket.SocketConnectionFactory">
@@ -15,6 +16,7 @@
         <property name="port" value="${socket.port}"/>
         <property name="keepAlive" value="${socket.keepAlive}"/>
         <property name="timeout" value="${socket.timeout}"/>
+        <property name="bufferSize" value="${socket.bufferSize}"/>
     </bean>
 
     <bean id="socketPool" class="com.tota.outside.rpc.socket.SocketPool">
