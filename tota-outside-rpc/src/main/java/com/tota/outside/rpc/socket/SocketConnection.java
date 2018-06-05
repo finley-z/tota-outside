@@ -42,7 +42,7 @@ public class SocketConnection {
         channel.configureBlocking(false);
         channel.connect(new InetSocketAddress(host, port));
         channel.register(selector, SelectionKey.OP_CONNECT);
-        String readMsg = "";
+        StringBuffer readMsg = new StringBuffer();
         while (selector.select(10000) > 0) {
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keys.iterator();
@@ -52,12 +52,12 @@ public class SocketConnection {
                 if (key.isConnectable()) {
                     doConnect(key, datagram);
                 } else if (key.isReadable()) {
-                    readMsg = doRead(key);
+                    readMsg.append(doRead(key));
                 }
                 keys.remove(key);
             }
         }
-        return readMsg;
+        return readMsg.toString();
     }
 
 
