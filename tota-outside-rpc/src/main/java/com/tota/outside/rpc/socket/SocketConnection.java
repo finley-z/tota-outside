@@ -1,19 +1,13 @@
 package com.tota.outside.rpc.socket;
 
-import com.tota.outside.util.LogUtil;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketTimeoutException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SocketConnection {
     private String host;
@@ -67,24 +61,25 @@ public class SocketConnection {
             clientChannel.finishConnect();
         }
         clientChannel.configureBlocking(false);
+        System.out.println("*********客户端执行写操作*********");
         clientChannel.write(ByteBuffer.wrap(new String(datagram).getBytes("UTF-8")));
         clientChannel.register(selector, SelectionKey.OP_READ);
     }
 
     public String doRead(SelectionKey key) throws IOException {
         SocketChannel clientChannel = (SocketChannel) key.channel();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(256);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         int count = clientChannel.read(byteBuffer);
-        if (count <= 0) {
-            clientChannel.close();
-            key.cancel();
-            LogUtil.log(this.getClass()).info("Received invalide data, close the connection");
-            return null;
+        System.out.println("*********客户端执行读操作*********");
+        String info = "";
+        if (count > 0) {
+            byte[] data = byteBuffer.array();
+            info =new String(data);
         }
-        byte[] data = byteBuffer.array();
-        String msg = new String(data).trim();
-//        clientChannel.close();
-//        selector.close();
-        return msg;
+        if (count == -1) {
+            clientChannel.close();
+        }
+        System.out.println("客户端此时读到的数据："+info);
+        return info;
     }
 }
