@@ -1,9 +1,11 @@
 package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.ConsumeMessage;
+import com.tota.outside.rpc.util.MacCodeGenerator;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +17,7 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
     private static LinkedHashMap<String, String> fieldsConfig = new LinkedHashMap<>();
     private static Map<String, Method> methods;
     private static Map<String, Field> fields;
+    private static String[] macFields={"transType","txMsgDateTime","posId","localSequence","cardId"};
 
     static {
         fieldsConfig.putAll(headerConfigs);
@@ -63,6 +66,9 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
      */
     @Override
     public String generateDatagram(ConsumeMessage consumeMessage) throws Exception {
+        String mac=generateMac(consumeMessage);
+        mac= MacCodeGenerator.computeMac("",mac);
+        consumeMessage.setMac(mac);
         return generate(fieldsConfig, methods, fields, consumeMessage);
      /*   StringBuilder sb = new StringBuilder();
         try {
@@ -76,6 +82,11 @@ public class ConsumeMsgResolver extends Resolver<ConsumeMessage> {
             e.printStackTrace();
         }
         return sb.toString();*/
+    }
+
+    @Override
+    public String generateMac(ConsumeMessage consumeMessage) throws InvocationTargetException, IllegalAccessException {
+        return getMacCodeStr(macFields,fieldsConfig,methods,fields,consumeMessage);
     }
 
     /**

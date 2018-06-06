@@ -37,6 +37,8 @@ public abstract class Resolver<T> {
     //报文生成  class -- string
     public abstract String generateDatagram(T t) throws InvocationTargetException, IllegalAccessException, Exception;
 
+    public abstract String generateMac(T t) throws InvocationTargetException, IllegalAccessException;
+
     //报文解析   string --class
     public abstract T resolveDatagram(String datagram) throws InvocationTargetException, InstantiationException, ParseException, IllegalAccessException, Exception;
 
@@ -61,23 +63,42 @@ public abstract class Resolver<T> {
             buffer.append(resolvedVal);
         }
         //计算报文长度
-        int valLen=Integer.parseInt(fieldsConfig.get("dataLength"));
-        int dataLen = buffer.length()-valLen;
+        int valLen = Integer.parseInt(fieldsConfig.get("dataLength"));
+        int dataLen = buffer.length() - valLen;
         String lenVal = getFieldValue(dataLen, fields.get("dataLength"), valLen);
-        buffer.replace(0,4,lenVal);
+        buffer.replace(0, 4, lenVal);
+        return buffer.toString();
+    }
+
+    /***
+     * 解析javabean属性中的值到报文域
+     * @return
+     */
+    protected String getMacCodeStr(String[] macFields, LinkedHashMap<String, String> fieldsConfig, Map<String, Method> methods, Map<String, Field> fields, T t) throws InvocationTargetException, IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < macFields.length; i++) {
+            String fieldName = macFields[i];
+            String getMethodName = fieldName + "_g";
+            Method getMethod = methods.get(getMethodName);
+            Field field = fields.get(fieldName);
+            int valLen = Integer.parseInt(fieldsConfig.get(fieldName));
+            Object val = getMethod.invoke(t);
+            String resolvedVal = getFieldValue(val, field, valLen);
+            buffer.append(resolvedVal);
+        }
         return buffer.toString();
     }
 
     //获取javabean属性值，转换成字符串
-    private String getFieldValue(Object value, Field field, int length) {
+    protected String getFieldValue(Object value, Field field, int length) {
         String val = "";
-        if(field.getType().equals(Date.class)){
-            DateTimeFormat format=field.getAnnotation(DateTimeFormat.class);
-            String pattern=format.pattern();
-            if(value!=null){
-                val= DateUtil.formatDate((Date) value, pattern);
+        if (field.getType().equals(Date.class)) {
+            DateTimeFormat format = field.getAnnotation(DateTimeFormat.class);
+            String pattern = format.pattern();
+            if (value != null) {
+                val = DateUtil.formatDate((Date) value, pattern);
             }
-        }else if (value != null) {
+        } else if (value != null) {
             val += value.toString();
         }
 
@@ -85,7 +106,7 @@ public abstract class Resolver<T> {
             Class fieldType = field.getType();
             if (fieldType.equals(Byte.class) || fieldType.equals(Short.class) || fieldType.equals(Integer.class) || fieldType.equals(Long.class)) {
                 val = fixZero(val, length, true);
-            } else if (fieldType.equals(String.class)||fieldType.equals(Date.class)) {
+            } else if (fieldType.equals(String.class) || fieldType.equals(Date.class)) {
                 val = fixZero(val, length, false);
             }
         }
@@ -98,6 +119,11 @@ public abstract class Resolver<T> {
      * @return
      */
     protected T resolve(LinkedHashMap<String, String> fieldsConfig, Map<String, Method> methods, Map<String, Field> fields, String datagram, Class<T> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, ParseException {
+
+        if(StringUtils.isEmpty(datagram)){
+            return null;
+        }
+
         T result = clazz.newInstance();
         Set<String> filedSet = fieldsConfig.keySet();
         Iterator<String> it = filedSet.iterator();
@@ -108,18 +134,18 @@ public abstract class Resolver<T> {
             Field field = fields.get(fieldName);
             int valLen = Integer.parseInt(fieldsConfig.get(fieldName));
             String val = datagram.substring(position, position + valLen);
-            Object valObj=getDatagramValue(val,field);
+            Object valObj = getDatagramValue(val, field);
             String getMethodName = fieldName + "_s";
             Method setMethod = methods.get(getMethodName);
-            setMethod.invoke(result,valObj);
-            position+=valLen;
+            setMethod.invoke(result, valObj);
+            position += valLen;
         }
 
         return result;
     }
 
     //获取报文中的字符串值，转换成javabean属性值
-    private Object getDatagramValue(String valueStr, Field field) throws ParseException {
+    protected Object getDatagramValue(String valueStr, Field field) throws ParseException {
         Object value = null;
         if (StringUtils.isNotEmpty(valueStr)) {
             Class fieldType = field.getType();
@@ -131,11 +157,11 @@ public abstract class Resolver<T> {
                 value = Integer.valueOf(valueStr);
             } else if (fieldType.equals(Long.class)) {
                 value = Long.valueOf(valueStr);
-            }else if(fieldType.equals(String.class)){
-                value=valueStr;
-            }else if(fieldType.equals(Date.class)){
-                DateTimeFormat format=field.getAnnotation(DateTimeFormat.class);
-                String pattern=format.pattern();
+            } else if (fieldType.equals(String.class)) {
+                value = valueStr;
+            } else if (fieldType.equals(Date.class)) {
+                DateTimeFormat format = field.getAnnotation(DateTimeFormat.class);
+                String pattern = format.pattern();
                 DateUtil.parserStringToDate(valueStr, pattern);
             }
         }
@@ -153,7 +179,7 @@ public abstract class Resolver<T> {
         if (value.length() == length) {
             return value;
         }
-        String zeros = intArrToString(new int[length-value.length()]);
+        String zeros = intArrToString(new int[length - value.length()]);
         if (isLeft) {
             return zeros + value;
         } else {
@@ -210,7 +236,7 @@ public abstract class Resolver<T> {
         return fields;
     }
 
-    private static void getMethods(Class clazz, Map<String, Method> methods) throws IntrospectionException {
+    protected static void getMethods(Class clazz, Map<String, Method> methods) throws IntrospectionException {
         List<Field> filedList = Arrays.asList(clazz.getDeclaredFields());
         Iterator<Field> it = filedList.iterator();
         while (it.hasNext()) {

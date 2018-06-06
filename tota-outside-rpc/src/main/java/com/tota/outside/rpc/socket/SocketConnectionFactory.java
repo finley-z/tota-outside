@@ -22,14 +22,14 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
 
     @Override
     public PooledObject<SocketConnection> makeObject() throws Exception {
-        log.info("[Socket Pool] ======创建Socket连接对象======");
+        log.info("[Socket Pool] ====== Create SocketConnection By Pool ======");
         SocketConnection connection=new SocketConnection(hostName,port,timeout,keepAlive,bufferSize);
         return new DefaultPooledObject<>(connection);
     }
 
     @Override
     public void destroyObject(PooledObject<SocketConnection> pooledObject) throws Exception {
-        log.info("[Socket Pool] ======销毁Socket连接对象======");
+        log.info("[Socket Pool] ====== Destroy SocketConnection From Pool ======");
         //释放连接，关闭buffer等
         pooledObject.getObject().closeConnect();
         passivateObject(pooledObject);
@@ -46,7 +46,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
      */
     @Override
     public boolean validateObject(PooledObject<SocketConnection> pooledObject) {
-        log.info("[Socket Pool] ======判断Socket连接对象是否有效======");
+        log.info("[Socket Pool] ====== Validate SocketConnection is effective======");
         return true;
     }
 
@@ -57,7 +57,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
      */
     @Override
     public void activateObject(PooledObject<SocketConnection> pooledObject) throws Exception {
-        log.info("[Socket Pool] ======激活Socket连接对象======");
+        log.info("[Socket Pool] ====== Activate SocketConnection While Borrow From Pool======");
         pooledObject.getObject().setIdle(true);
     }
 
@@ -68,7 +68,7 @@ public class SocketConnectionFactory implements PooledObjectFactory<SocketConnec
      */
     @Override
     public void passivateObject(PooledObject<SocketConnection> pooledObject) throws Exception {
-        log.info("[Socket Pool] ======钝化ocket连接对象======");
+        log.info("[Socket Pool] ====== Passivate SocketConnection Return to Pool======");
         pooledObject.getObject().setIdle(false);
     }
 

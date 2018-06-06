@@ -2,8 +2,7 @@ package com.tota.outside.rpc;
 
 import com.tota.outside.rpc.api.model.SignInMessage;
 import com.tota.outside.rpc.resolver.SignInMsgResolver;
-import com.tota.outside.rpc.response.ResponseStateParser;
-import com.tota.outside.rpc.socket.ConnectionTemplet;
+import com.tota.outside.rpc.socket.ConnectionTemplate;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Date;
@@ -48,7 +47,7 @@ public class Main {
             String res=resolver.generateDatagram(msg);
             System.out.println("请求报文："+res);
 //            ResponseStateParser.Status status= ResponseStateParser.getResponseState("24003");
-            ConnectionTemplet templet= (ConnectionTemplet) context.getBean("connectionTemplet");
+            ConnectionTemplate templet= (ConnectionTemplate) context.getBean("connectionTemplet");
            String response= templet.processRequest(res);
            System.out.println("响应报文:"+response);
            SignInMessage responseMsg=resolver.resolveDatagram(response);

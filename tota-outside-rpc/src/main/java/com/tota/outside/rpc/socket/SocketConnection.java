@@ -1,6 +1,7 @@
 package com.tota.outside.rpc.socket;
 
 import com.tota.outside.util.LogUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
@@ -44,6 +45,10 @@ public class SocketConnection {
     }
 
     public String processRequest(String datagram) throws IOException {
+        if(StringUtils.isEmpty(datagram)){
+            return "";
+        }
+
         if (!channel.isConnected()) {
             channel.connect(new InetSocketAddress(host, port));
         }
@@ -102,8 +107,12 @@ public class SocketConnection {
 
     public void closeConnect() {
         try {
-            channel.close();
-            selector.close();
+            if(channel!=null){
+                channel.close();
+            }
+            if(selector!=null){
+                selector.close();
+            }
             log.info("[SocketConnection] =================Close Socket Connection==================");
         } catch (IOException e) {
             e.printStackTrace();

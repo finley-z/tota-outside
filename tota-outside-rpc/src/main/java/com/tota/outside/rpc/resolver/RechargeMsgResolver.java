@@ -2,9 +2,11 @@ package com.tota.outside.rpc.resolver;
 
 import com.tota.outside.rpc.api.model.RechargeMessage;
 import com.tota.outside.rpc.api.model.SignInMessage;
+import com.tota.outside.rpc.util.MacCodeGenerator;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,6 +15,7 @@ public class RechargeMsgResolver extends Resolver<RechargeMessage> {
     public static LinkedHashMap<String, String> fieldsConfig = new LinkedHashMap<>();
     private static Map<String, Method> methods;
     private static Map<String, Field> fields;
+    private static String[] macFields={"txMsgDateTime","txMsgType","posId","posSequence","edCardId"};
 
     static {
         fieldsConfig.putAll(headerConfigs);
@@ -71,7 +74,15 @@ public class RechargeMsgResolver extends Resolver<RechargeMessage> {
 
     @Override
     public String generateDatagram(RechargeMessage rechargeMessage) throws Exception {
+        String mac=generateMac(rechargeMessage);
+        mac= MacCodeGenerator.computeMac("",mac);
+        rechargeMessage.setMac(mac);
         return generate(fieldsConfig, methods, fields, rechargeMessage);
+    }
+
+    @Override
+    public String generateMac(RechargeMessage rechargeMessage) throws InvocationTargetException, IllegalAccessException {
+        return getMacCodeStr(macFields,fieldsConfig,methods,fields,rechargeMessage);
     }
 
     @Override

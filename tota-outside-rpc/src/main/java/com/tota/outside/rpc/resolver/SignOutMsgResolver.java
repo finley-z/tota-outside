@@ -45,6 +45,11 @@ public class SignOutMsgResolver extends Resolver<SignOutMessage> {
     }
 
     @Override
+    public String generateMac(SignOutMessage signOutMessage) {
+        return null;
+    }
+
+    @Override
     public SignOutMessage resolveDatagram(String datagram) throws Exception{
         return resolve(fieldsConfig,methods,fields,datagram,SignOutMessage.class);
     }
