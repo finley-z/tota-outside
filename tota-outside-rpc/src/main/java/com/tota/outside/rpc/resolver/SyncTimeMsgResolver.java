@@ -37,6 +37,11 @@ public class SyncTimeMsgResolver extends Resolver<SyncTimeMessage> {
     }
 
     @Override
+    public String generateMac(SyncTimeMessage syncTimeMessage) {
+        return null;
+    }
+
+    @Override
     public SyncTimeMessage resolveDatagram(String datagram) throws Exception{
         return resolve(fieldsConfig,methods,fields,datagram,SyncTimeMessage.class);
     }

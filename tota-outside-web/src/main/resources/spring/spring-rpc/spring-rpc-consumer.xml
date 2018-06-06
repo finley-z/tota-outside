@@ -11,6 +11,13 @@
 		<property name="retries" value="0" />
 	</bean>
 
+	<bean id="dGTService" class="com.tota.se.rpc.dubbo.client.DubboClient">
+		<property name="interfaceName" value="com.tota.outside.rpc.api.service.DGTService" />
+		<property name="protocol" value="dubbo" />
+		<property name="isCheck" value="false" />
+		<property name="retries" value="0" />
+	</bean>
+
 	<bean id="dynamicDubboClient" class="com.tota.se.rpc.dubbo.source.DynamicDubboClient">
 		<property name="openLog" value="${logback.dubbo.openLog}" />
 	</bean>

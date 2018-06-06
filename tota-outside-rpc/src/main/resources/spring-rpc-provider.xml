@@ -17,6 +17,15 @@
     </bean>
 
 
+    <bean id="dGTService" class="com.tota.se.rpc.dubbo.provider.DubboService" >
+        <property name="interfaceName" value="com.tota.outside.rpc.api.service.DGTService" />
+        <property name="interfaceRef" ref="dGTServiceImpl" />
+        <property name="protocols" value="${dubbo.protocols}" />
+        <property name="owner" value="xiaosc" />
+        <property name="timeout" value="45000" />
+        <property name="retries" value="0" />
+    </bean>
+
     <bean id="dynamicDubboProvider" class="com.tota.se.rpc.dubbo.source.DynamicDubboProvider">
         <property name="openLog" value="${logback.dubbo.openLog}" />
     </bean>

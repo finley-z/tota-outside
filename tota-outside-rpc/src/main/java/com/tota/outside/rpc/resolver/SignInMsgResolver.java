@@ -49,6 +49,12 @@ public class SignInMsgResolver extends Resolver<SignInMessage> {
     }
 
     @Override
+    public String generateMac(SignInMessage signInMessage) {
+
+        return null;
+    }
+
+    @Override
     public SignInMessage resolveDatagram(String datagram) throws Exception{
         return resolve(fieldsConfig,methods,fields,datagram,SignInMessage.class);
     }

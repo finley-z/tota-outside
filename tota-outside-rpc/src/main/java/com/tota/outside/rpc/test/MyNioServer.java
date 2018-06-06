@@ -1,5 +1,8 @@
 package com.tota.outside.rpc.test;
 
+import com.tota.outside.rpc.socket.SocketConnection;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -14,8 +17,11 @@ import java.util.Set;
 public class MyNioServer {
     private Selector selector;          //创建一个选择器
     private final static int port = 8686;
+
     private final static int BUF_SIZE = 1024;
     private static final int TIMEOUT = 3000;
+
+    private static final org.apache.commons.logging.Log log = LogFactory.getLog(MyNioServer.class);
 
     private void initServer() throws IOException {
         //创建通道管理器对象selector
@@ -71,6 +77,7 @@ public class MyNioServer {
             System.out.println("*********服务端执行读操作*********");
             byte[] data = buf.array();
             info =new String(data);
+            log.info("从客户端发送过来的消息是：" + info);
         }
         if (bytesRead == -1) {
             clientChannel.close();

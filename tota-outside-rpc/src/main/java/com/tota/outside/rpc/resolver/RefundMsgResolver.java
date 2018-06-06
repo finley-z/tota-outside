@@ -61,6 +61,11 @@ public class RefundMsgResolver extends Resolver<RefundMessage> {
     }
 
     @Override
+    public String generateMac(RefundMessage refundMessage) {
+        return null;
+    }
+
+    @Override
     public RefundMessage resolveDatagram(String datagram) throws Exception {
         return resolve(fieldsConfig, methods, fields, datagram, RefundMessage.class);
     }
