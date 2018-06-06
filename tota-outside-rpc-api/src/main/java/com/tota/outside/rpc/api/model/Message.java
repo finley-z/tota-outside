@@ -2,9 +2,10 @@ package com.tota.outside.rpc.api.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public  class Message {
+public  class Message implements Serializable {
     private Integer dataLength;
     private String  packageSyncMsg;
     private Byte    packageCompress;

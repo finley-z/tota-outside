@@ -8,7 +8,7 @@ import com.tota.se.common.domain.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("dGTServiceImpl")
 public class DGTServiceImpl implements DGTService {
     @Autowired
     private ConnectionTemplate connectionTemplate;

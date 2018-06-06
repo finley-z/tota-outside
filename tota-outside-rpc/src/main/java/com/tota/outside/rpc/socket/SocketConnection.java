@@ -23,10 +23,11 @@ public class SocketConnection {
 
     private String host;
     private int port;
-    private int timeout = 2000;
+    private int timeout = 4000;
     private boolean idle = false;
     private boolean keepAlive = true;
     private int bufferSize = 8192;
+    private boolean isBreak=false;
 
     private SocketChannel channel;
     private Selector selector;
@@ -45,32 +46,48 @@ public class SocketConnection {
     }
 
     public String processRequest(String datagram) throws IOException {
+        StringBuffer readMsg = new StringBuffer("");
         if(StringUtils.isEmpty(datagram)){
-            return "";
+            return readMsg.toString();
         }
 
         if (!channel.isConnected()) {
-            channel.connect(new InetSocketAddress(host, port));
+             channel.connect(new InetSocketAddress(host, port));
+             channel.register(selector, SelectionKey.OP_CONNECT);
+
+        }else{
+            channel.write(ByteBuffer.wrap(datagram.getBytes("UTF-8")));
+            channel.register(selector, SelectionKey.OP_READ);
+
         }
 
-        channel.register(selector, SelectionKey.OP_CONNECT);
-
-        StringBuffer readMsg = new StringBuffer();
-        while (selector.select(timeout) > 0) {
-            Set<SelectionKey> keys = selector.selectedKeys();
-            Iterator<SelectionKey> iterator = keys.iterator();
-            while (iterator.hasNext()) {
-                SelectionKey key = iterator.next();
-                if (key.isConnectable()) {
-                    openConnect(key);
-                }else if (key.isWritable()) {
-                    doWrite(key, datagram);
-                }else if (key.isReadable()) {
-                    readMsg.append(doRead(key));
+//        while(!isBreak){
+            while (selector.select(timeout) > 0) {
+                Set<SelectionKey> keys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = keys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    if (key.isConnectable()) {
+                        openConnect(key);
+                    } else if (key.isWritable()) {
+                        doWrite(key, datagram);
+                    } else if (key.isReadable()) {
+                        readMsg.append(doRead(key));
+                        isBreak = true;
+                        return readMsg.toString();
+                    }
+                    iterator.remove();
                 }
-                iterator.remove();
             }
-        }
+//            }else{
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+        isBreak=false;
         return readMsg.toString();
     }
 
@@ -80,6 +97,8 @@ public class SocketConnection {
         if (clientChannel.isConnectionPending()) {
             clientChannel.finishConnect();
         }
+        log.info("[SocketConnection]  Client Connected Socket!");
+
         clientChannel.register(selector, SelectionKey.OP_WRITE);
     }
 
@@ -102,6 +121,7 @@ public class SocketConnection {
         }
         byte[] data = byteBuffer.array();
         String msg = new String(data).trim();
+        clientChannel.register(selector, SelectionKey.OP_WRITE);
         return msg;
     }
 

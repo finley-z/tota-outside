@@ -24,7 +24,7 @@
         <constructor-arg index="1" ref="socketPoolConfig"/>
     </bean>
 
-    <bean id="connectionTemplet" class="com.tota.outside.rpc.socket.ConnectionTemplet">
+    <bean id="connectionTemplate" class="com.tota.outside.rpc.socket.ConnectionTemplate">
         <property name="pool" ref="socketPool"/>
     </bean>
 
