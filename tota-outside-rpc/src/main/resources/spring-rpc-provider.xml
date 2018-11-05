@@ -16,7 +16,6 @@
         <property name="retries" value="0" />
     </bean>
 
-
     <bean id="dGTService" class="com.tota.se.rpc.dubbo.provider.DubboService" >
         <property name="interfaceName" value="com.tota.outside.rpc.api.service.DGTService" />
         <property name="interfaceRef" ref="dGTServiceImpl" />

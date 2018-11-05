@@ -40,7 +40,7 @@ public class RollbackConsumeMessage extends Message {
     private Long origAuthSeq;
     private String reserved;
     private String TAC;
-    private Integer txnResponse ;
+    private String txnResponse ;
 
     public Integer getUnitId() {
         return unitId;
@@ -290,11 +290,11 @@ public class RollbackConsumeMessage extends Message {
         this.TAC = TAC;
     }
 
-    public Integer getTxnResponse() {
+    public String getTxnResponse() {
         return txnResponse;
     }
 
-    public void setTxnResponse(Integer txnResponse) {
+    public void setTxnResponse(String txnResponse) {
         this.txnResponse = txnResponse;
     }
 }

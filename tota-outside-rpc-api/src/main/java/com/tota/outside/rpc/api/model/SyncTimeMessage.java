@@ -12,7 +12,7 @@ public class SyncTimeMessage extends Message {
     private Long samId;
     private Long operId;
     private String reserved;
-    private Integer responseCode_Body;
+    private String responseCode_Body;
 
     public Date getLocDateTime() {
         return locDateTime;
@@ -54,11 +54,11 @@ public class SyncTimeMessage extends Message {
         this.reserved = reserved;
     }
 
-    public Integer getResponseCode_Body() {
+    public String getResponseCode_Body() {
         return responseCode_Body;
     }
 
-    public void setResponseCode_Body(Integer responseCode_Body) {
+    public void setResponseCode_Body(String responseCode_Body) {
         this.responseCode_Body = responseCode_Body;
     }
 }

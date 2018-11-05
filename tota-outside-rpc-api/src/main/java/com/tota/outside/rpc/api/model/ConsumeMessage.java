@@ -36,7 +36,7 @@ public class ConsumeMessage extends Message {
     private Long authSeq;
     private String reserved;
     private String TAC;
-    private Integer responseCode_Body;
+    private String responseCode_Body;
 
     public Integer getUnitId() {
         return unitId;
@@ -254,11 +254,11 @@ public class ConsumeMessage extends Message {
         this.TAC = TAC;
     }
 
-    public Integer getResponseCode_Body() {
+    public String getResponseCode_Body() {
         return responseCode_Body;
     }
 
-    public void setResponseCode_Body(Integer responseCode_Body) {
+    public void setResponseCode_Body(String responseCode_Body) {
         this.responseCode_Body = responseCode_Body;
     }
 }

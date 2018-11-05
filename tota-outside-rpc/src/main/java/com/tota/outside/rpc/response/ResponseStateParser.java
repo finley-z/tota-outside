@@ -53,7 +53,7 @@ public class ResponseStateParser {
 
         //联机报文应答
         responseMap.put("00000","{'isSuccess':true,desc:'成功'}");
-        responseMap.put("00000","{'isSuccess':false,desc:'系统错误'}");
+        responseMap.put("00001","{'isSuccess':false,desc:'系统错误'}");
 
         //联机卡错误
         responseMap.put("24001","{'isSuccess':false,desc:'授权状态未审核'}");

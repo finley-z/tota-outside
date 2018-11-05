@@ -25,7 +25,7 @@ public class SignInMessage  extends  Message{
     private String   paramBit;
     private String   keySet;
     private String   reserved;
-    private Integer  responseCode_Body;
+    private String  responseCode_Body;
 
     public Integer getUnitId() {
         return unitId;
@@ -147,13 +147,14 @@ public class SignInMessage  extends  Message{
         this.reserved = reserved;
     }
 
-    public Integer getResponseCode_Body() {
+    public void setResponseCode_Body(String responseCode_Body) {
+        this.responseCode_Body = responseCode_Body;
+    }
+
+    public String getResponseCode_Body() {
         return responseCode_Body;
     }
 
-    public void setResponseCode_Body(Integer responseCode_Body) {
-        this.responseCode_Body = responseCode_Body;
-    }
 
     public Long getSamAuthInfo() {
         return samAuthInfo;

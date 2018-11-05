@@ -55,7 +55,7 @@ public class RechargeMessage extends Message {
     private Integer lasttac;
     private String  reserved;
     private String  tac;
-    private Integer txnResponse;
+    private String txnResponse;
 
     public Integer getUnitId() {
         return unitId;
@@ -393,11 +393,11 @@ public class RechargeMessage extends Message {
         this.tac = tac;
     }
 
-    public Integer getTxnResponse() {
+    public String getTxnResponse() {
         return txnResponse;
     }
 
-    public void setTxnResponse(Integer txnResponse) {
+    public void setTxnResponse(String txnResponse) {
         this.txnResponse = txnResponse;
     }
 }
